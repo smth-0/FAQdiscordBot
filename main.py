@@ -1,6 +1,5 @@
 # if a new file is created just import it here
 from settings import *
-from lists import *
 from wrapper import *
 import discord
 from discord.ext import commands
@@ -52,6 +51,7 @@ async def on_reaction_add(reaction, channel):
         print('emoji added')
         print('"%s" quote by user "%s" with id @%s' % (
         reaction.message.content, reaction.message.author, reaction.message.author.id))
+        wrapper.add_quote(reaction.message)
         await channel.send('logged!')
       else:
         return
