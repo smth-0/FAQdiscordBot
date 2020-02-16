@@ -1,6 +1,7 @@
 # if a new file is created just import it here
 from settings import *
 from lists import *
+from wrapper import *
 import discord
 from discord.ext import commands
 
@@ -47,17 +48,19 @@ async def test(message):
 @client.event
 async def on_reaction_add(reaction, channel):
     if reaction.emoji == '👍':
+      if 'Frozenbyte Developer' in [i.name for i in reaction.message.author.roles]:
         print('emoji added')
         print('"%s" quote by user "%s" with id @%s' % (
         reaction.message.content, reaction.message.author, reaction.message.author.id))
         await channel.send('logged!')
+      else:
+        return
 
-
-
-    elif reaction.emoji == '⬅':
+    elif reaction.emoji == 'afc96e77efee1190e1fbe3cc69f149f8':
         print('flip left')
-    elif reaction.emoji == '➡':
+    elif reaction.emoji == 'afc96e77efee1190e1fbe3cc69f149f8':
         print('flip right')
+        await channel.send('right')
     else:
         print(reaction.emoji)
 
