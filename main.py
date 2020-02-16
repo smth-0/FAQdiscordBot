@@ -4,33 +4,70 @@ from lists import *
 import discord
 from discord.ext import commands
 
-
 client = commands.Bot(command_prefix='.')
+
+current_books = {}
+
+
+class Book:
+    def __init__(self, ctx):
+        print('new book created', ctx.message.channel.name)
+        self.page = 0
+
+    async def start_book(self, context):
+        self.msg = await context.send("Book Example")
+
+    def flip(self, flip=1):
+        # 1 - next, -1 - previous
+        self.page += flip
+        self.msg.edit('this is page #%d.' % self.page)
+
 
 @client.event
 async def on_ready():
     print("on")
 
-#how the person brings up the message
+
+# how the person brings up the message
 @client.command(aliases=['quote'])
-async def quotes_safezone(ctx):
-    #needs to be turned into a book
-    msg = await ctx.send("Book Example")
+async def book_spawn(ctx):
+    # needs to be turned into a book
+    book_obj = Book(ctx)
+    await book_obj.start_book(ctx)
+    current_books[book_obj.msg.id] = (book_obj)
+
 
 @client.event
 async def test(message):
-  if message.author.bot:
-    print("something")
-    await client.delete_message(message)
+    if message.author.bot:
+        print("something")
+        await client.delete_message(message)
+
 
 @client.event
 async def on_reaction_add(reaction, channel):
-  if reaction.emoji == '👍':
-    await channel.send("Book Example") 
+    if reaction.emoji == '👍':
+        print('emoji added')
+        print('"%s" quote by user "%s" with id @%s' % (
+        reaction.message.content, reaction.message.author, reaction.message.author.id))
+        await channel.send('logged!')
+
+
+
+    elif reaction.emoji == '⬅':
+        print('flip left')
+    elif reaction.emoji == '➡':
+        print('flip right')
+    else:
+        print(reaction.emoji)
+
 
 @client.command(aliases=['next'])
 async def next_page(ctx):
-  await ctx.message.edit(content="new page")
+    current_books[-1].flip(1)
 
 
-client.run(key)
+try:
+    client.run(key)
+except Exception as e:
+    print('failed to start the bot. reason:', e)
