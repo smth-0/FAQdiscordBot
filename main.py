@@ -1,6 +1,6 @@
 # if a new file is created just import it here
 from settings import *
-from wrapper import *
+import wrapper
 import discord
 from discord.ext import commands
 
