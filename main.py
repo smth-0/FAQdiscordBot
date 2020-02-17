@@ -3,8 +3,9 @@ from settings import *
 import wrapper
 import discord
 from discord.ext import commands
+from threading import Thread
 
-client = commands.Bot(command_prefix='.')
+client = commands.Bot(command_prefix='.', case_insensitive=True)
 
 current_books = {}
 
@@ -15,13 +16,12 @@ class Book:
         self.page = 0
 
     async def start_book(self, context):
-        self.msg = await context.send("Book Example")
+        self.msg = await context.send(gui1)
 
     def flip(self, flip=1):
         # 1 - next, -1 - previous
         self.page += flip
         self.msg.edit('this is page #%d.' % self.page)
-
 
 @client.event
 async def on_ready():
@@ -36,14 +36,6 @@ async def book_spawn(ctx):
     await book_obj.start_book(ctx)
     current_books[book_obj.msg.id] = (book_obj)
 
-
-@client.event
-async def test(message):
-    if message.author.bot:
-        print("something")
-        await client.delete_message(message)
-
-
 @client.event
 async def on_reaction_add(reaction, channel):
     if reaction.emoji == '👍':
@@ -56,18 +48,34 @@ async def on_reaction_add(reaction, channel):
       else:
         return
 
-    elif reaction.emoji == 'afc96e77efee1190e1fbe3cc69f149f8':
+    elif reaction.emoji == 'de73a9116babdbce65076a42ac2ac2ba':
         print('flip left')
-    elif reaction.emoji == 'afc96e77efee1190e1fbe3cc69f149f8':
+        current_books[-1].flip(-1)
+
+    elif reaction.emoji == '464b4ad3ec906581bdc288c42780b3c9':
         print('flip right')
-        await channel.send('right')
+        current_books[-1].flip(1)
     else:
         print(reaction.emoji)
 
 
 @client.command(aliases=['next'])
 async def next_page(ctx):
-    current_books[-1].flip(1)
+  print('flip right')
+  current_books[-1].flip(1)
+
+@client.command(aliases=['before'])
+async def last_page(ctx):
+  print('flip left')
+  current_books[-1].flip(-1)
+
+@client.command(aliases=['searchs'])
+async def search(ctx, arg):
+  arg = str(arg)
+  args = arg.split()
+  for arg in args:
+    pass
+  
 
 
 try:
