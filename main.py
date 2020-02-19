@@ -38,8 +38,8 @@ class Book:
         if self.pagelen:
             self.page += flip
             if self.page > self.pagelen:
-                self.page = 1
-            if self.page < 1:
+                self.page = 0
+            if self.page < 0:
                 self.page = self.pagelen
             self.text, self.pagelen = wrapper.book_renderer(self.search, self.results, self.page)
             await self.msg.clear_reactions()
