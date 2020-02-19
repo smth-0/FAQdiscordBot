@@ -90,13 +90,13 @@ async def on_reaction_add(reaction, channel):
         roles_who_reacted = []
         for i in [i.roles for i in who_reacted]:
             roles_who_reacted.extend(i)
-        if quotemod in [i.name for i in roles_who_reacted]:
-            if reaction.emoji == left_turn:
-                print('flip left')
-                await current_books[reaction.message.id].flip(-1)
-            elif reaction.emoji == right_turn:
-                print('flip right')
-                await current_books[reaction.message.id].flip(1)
+
+        if reaction.emoji == left_turn:
+            print('flip left')
+            await current_books[reaction.message.id].flip(-1)
+        elif reaction.emoji == right_turn:
+            print('flip right')
+            await current_books[reaction.message.id].flip(1)
 
 
 @client.command(aliases=['get'])
