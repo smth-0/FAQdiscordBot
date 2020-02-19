@@ -7,16 +7,28 @@ quotes_per_page = 10
 print('wrapper library imported.')
 
 
+def fetch_ID(id):
+    res = cur.execute("""SELECT * FROM quotes WHERE msgID IS %s""" % id).fetchall()
+    res = [(i[0].replace(r';!;', r"'"), i[1].replace(r';!;', r"'"), i[2], i[3], i[4], i[5]) for i in res]
+    # print(res[0])
+    return res
+
+
+
 def add_quote(msg_obj):
     # reaction.message should be passed here
     text, usr, msgID, usr_id = msg_obj.content, str(msg_obj.author), msg_obj.id, msg_obj.author.id
     dateUTC, jumplink = msg_obj.created_at, msg_obj.jump_url
 
-    cur.execute(
-        """INSERT INTO quotes(content, author, msgID, authorID, date, jumplink) VALUES('%s', '%s', '%s', '%s', '%s', '%s')""" %
-        (text.replace(r"'", r";!;"), usr.replace(r"'", r";!;"), msgID, usr_id, dateUTC, jumplink))
-
-    entry.commit()
+    # print(fetch_ID(msgID))
+    if not fetch_ID(msgID):
+      cur.execute(
+          """INSERT INTO quotes(content, author, msgID, authorID, date, jumplink) VALUES('%s', '%s', '%s', '%s', '%s', '%s')""" %
+          (text.replace(r"'", r";!;"), usr.replace(r"'", r";!;"), msgID, usr_id, dateUTC, jumplink))
+      entry.commit()
+      return True
+    else:
+      return False
 
 
 def fecth_quote(tags=None):
@@ -28,13 +40,6 @@ def fecth_quote(tags=None):
         tmp.append(r"content like '%{}%' ".format(tag))
     request = ' OR '.join(tmp)
     res = cur.execute("""SELECT * FROM quotes WHERE """ + request).fetchall()
-    res = [(i[0].replace(r';!;', r"'"), i[1].replace(r';!;', r"'"), i[2], i[3], i[4], i[5]) for i in res]
-    # print(res[0])
-    return res
-
-
-def fetch_ID(id):
-    res = cur.execute("""SELECT * FROM quotes WHERE msgID IS %s""" % id).fetchall()
     res = [(i[0].replace(r';!;', r"'"), i[1].replace(r';!;', r"'"), i[2], i[3], i[4], i[5]) for i in res]
     # print(res[0])
     return res
