@@ -91,6 +91,10 @@ async def on_reaction_add(reaction, channel):
         for i in [i.roles for i in who_reacted]:
             roles_who_reacted.extend(i)
 
+        isok = False
+        for i in roles_who_reacted:
+            if i.name != ''
+
         if reaction.emoji == left_turn:
             print('flip left')
             await current_books[reaction.message.id].flip(-1)
