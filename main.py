@@ -81,7 +81,7 @@ async def on_reaction_add(reaction, channel):
             print('"%s" quote by user "%s" with id @%s' % (
                 reaction.message.content, reaction.message.author, reaction.message.author.id))
             if wrapper.add_quote(reaction.message):
-              await channel.send('logged!')
+                await channel.send('logged!')
         else:
             return
 
@@ -98,13 +98,31 @@ async def on_reaction_add(reaction, channel):
                 print('flip right')
                 await current_books[reaction.message.id].flip(1)
 
-@client.command(aliases=['searchs'])
-async def search(ctx, arg):
-    arg = str(arg)
-    args = arg.split()
-    for arg in args:
-        pass
 
+@client.command(aliases=['get'])
+async def id(ctx, *args):
+    try:
+        if args[0] == 'id':
+            try:
+                cur_quote = wrapper.fetch_ID(args[1])[0]
+            except:
+                raise ValueError
+            author, text = cur_quote[1], cur_quote[0].replace('\n', '\t')
+            date, jumplink = cur_quote[4][:16], cur_quote[5]
+
+            quote_hud = """> <o>=============<%s>=============<o>
+> **%s** - %s
+> jumplink: %s""" % (date, author, text, jumplink)
+
+            txt = """you requested message with ID %s. Here's your message.\n%s""" % (id, quote_hud)
+            await ctx.send(txt)
+        else:
+            raise ValueError
+    except Exception as e:
+        if type(e) == ValueError or len(args) == 0:
+            await ctx.send('failed to understand the command. Double check your request and try again.')
+        else:
+            print(e, 'cur_quote:', cur_quote)
 
 try:
     client.run(key)

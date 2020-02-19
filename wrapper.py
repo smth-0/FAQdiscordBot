@@ -14,7 +14,6 @@ def fetch_ID(id):
     return res
 
 
-
 def add_quote(msg_obj):
     # reaction.message should be passed here
     text, usr, msgID, usr_id = msg_obj.content, str(msg_obj.author), msg_obj.id, msg_obj.author.id
@@ -22,13 +21,13 @@ def add_quote(msg_obj):
 
     # print(fetch_ID(msgID))
     if not fetch_ID(msgID):
-      cur.execute(
-          """INSERT INTO quotes(content, author, msgID, authorID, date, jumplink) VALUES('%s', '%s', '%s', '%s', '%s', '%s')""" %
-          (text.replace(r"'", r";!;"), usr.replace(r"'", r";!;"), msgID, usr_id, dateUTC, jumplink))
-      entry.commit()
-      return True
+        cur.execute(
+            """INSERT INTO quotes(content, author, msgID, authorID, date, jumplink) VALUES('%s', '%s', '%s', '%s', '%s', '%s')""" %
+            (text.replace(r"'", r";!;"), usr.replace(r"'", r";!;"), msgID, usr_id, dateUTC, jumplink))
+        entry.commit()
+        return True
     else:
-      return False
+        return False
 
 
 def fecth_quote(tags=None):
