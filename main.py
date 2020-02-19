@@ -10,9 +10,10 @@ client = commands.Bot(command_prefix='.', case_insensitive=True)
 current_books = {}
 last_100_books = []
 left_turn, right_turn = '⬅️', '➡️'
+quote_emoji = '💾'
 
 FBdev = 'Frozenbyte Developer'  # quotable person
-quotemod = 'Frozenbyte Developer'  # role allowed to put quotes into DB
+quotemod = 'Moderator'  # role allowed to put quotes into DB
 book_timeout = 500  # seconds after last flip before it deletes the book -- doesnt works, ignore --
 
 
@@ -73,8 +74,9 @@ async def book_spawn(ctx, *args):
 
 @client.event
 async def on_reaction_add(reaction, channel):
-    if reaction.emoji == '👍':
-        if FBdev in [i.name for i in reaction.message.author.roles]:
+    if reaction.emoji == quote_emoji:
+        roles = [i.name for i in reaction.message.author.roles]
+        if FBdev in roles or quotemod in roles:
             print('emoji added')
             print('"%s" quote by user "%s" with id @%s' % (
                 reaction.message.content, reaction.message.author, reaction.message.author.id))
@@ -95,7 +97,6 @@ async def on_reaction_add(reaction, channel):
             elif reaction.emoji == right_turn:
                 print('flip right')
                 await current_books[reaction.message.id].flip(1)
-
 
 @client.command(aliases=['searchs'])
 async def search(ctx, arg):
