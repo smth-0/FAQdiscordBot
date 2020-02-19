@@ -22,7 +22,7 @@ class Book:
         if len(tags) == 0:
             tags = None
         print('new book created in #', ctx.message.channel.name, 'with tags:', tags)
-        self.page = 1
+        self.page = 0
         self.results = wrapper.fecth_quote(tags)
         self.search = tags
 
@@ -38,10 +38,10 @@ class Book:
         # 1 - next, -1 - previous
         if self.pagelen:
             self.page += flip
-            if self.page > self.pagelen:
+            if self.page >= self.pagelen:
                 self.page = 0
             if self.page < 0:
-                self.page = self.pagelen
+                self.page = self.pagelen - 1
             self.text, self.pagelen = wrapper.book_renderer(self.search, self.results, self.page)
             await self.msg.clear_reactions()
             await self.msg.add_reaction(left_turn)
@@ -90,15 +90,11 @@ async def on_reaction_add(reaction, channel):
         roles_who_reacted = []
         for i in [i.roles for i in who_reacted]:
             roles_who_reacted.extend(i)
-
-        isok = False
-        for i in roles_who_reacted:
-            if i.name != ''
-
-        if reaction.emoji == left_turn:
+        isusr = len(who_reacted) > 1
+        if reaction.emoji == left_turn and isusr:
             print('flip left')
             await current_books[reaction.message.id].flip(-1)
-        elif reaction.emoji == right_turn:
+        elif reaction.emoji == right_turn and isusr:
             print('flip right')
             await current_books[reaction.message.id].flip(1)
 

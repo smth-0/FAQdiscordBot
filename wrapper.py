@@ -55,6 +55,7 @@ def book_renderer(search='none', results=None, page=0):
     if l > len(results):
         l = 0
     pagelen = len(results) // quotes_per_page
+    pagelen = len(results)//quotes_per_page + int(len(results)/quotes_per_page > len(results)//quotes_per_page)
     page_results = results[l:r]
 
     for cur_quote in page_results:
@@ -81,4 +82,6 @@ def book_renderer(search='none', results=None, page=0):
 > quotes:
 %s
 %s""" % (tags_hud, page_hud, quotes_hud, debug)
+    if len(hull) > 2000:
+      return "unexpected 2k limit error on page %d" % page, pagelen
     return hull, pagelen
