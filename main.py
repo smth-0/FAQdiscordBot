@@ -58,6 +58,38 @@ async def on_ready():
     print("on")
 
 
+@client.command(aliases=['delete_quote'])
+async def delete(ctx, *args):
+  try:
+    if args[0] == 'id':
+       wrapper.quote_del(args[1])
+  except Exception as e:
+    print("failed to delete msg. stack:", e)
+    return
+  finally:
+    print ("deleted msg from db", *args)
+    
+    
+@client.command()
+async def helpme(ctx):
+  await ctx.send("""```diff
+commands list
+```
+```asciidoc
+= ".quote <tags>" - search for keywords in the quote database. 
+(Shows all if tags is none)
+= ".get id <msgID>" - gives you jump link to the message for requested message ID. 
+Note: only quoted messages are supported. 
+= Adding 💾 emoji works as command to save the quote. 
+
+= Made by community members
+Lunar#1535
+sweer#6178
+Blue#8044
+= And a special thanks too
+Oobfiche#5954
+🐉Mr. Extinct#6090```""")
+
 # how the person brings up the message
 @client.command(aliases=['quote'])
 async def book_spawn(ctx, *args):
@@ -128,3 +160,4 @@ try:
     client.run(key)
 except Exception as e:
     print('failed to start the bot. reason:', e)
+

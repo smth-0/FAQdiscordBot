@@ -4,6 +4,5 @@ from discord.ext import commands
 msg = ""
 lists = 0
 quotelist = 0
-key = 'NjIxMzE0NzA4NTY5NDU2NjQw.Xk1hEg.SvAzYhRTVjewjdLZ6N11TNtvCiY'
-# Lunar's token
-gui1 = """> quote example"""
+key = 'Njc4MDI5MzM3OTk1Mzc4Njg4.Xk29uw.y-OzIKLsjlffAvgwzD0vFDzO_Z0'
+# Mine now :D - sweer

@@ -69,7 +69,7 @@ def book_renderer(search='none', results=None, page=0):
     if pagelen:
         page_hud = "page %d from %d" % (page + 1, pagelen)
     else:
-        page_hud = ""
+        page_hud = "no pages"
 
     debug = """debug:
     l, r: %d, %d
@@ -85,3 +85,7 @@ def book_renderer(search='none', results=None, page=0):
     if len(hull) > 2000:
       return "unexpected 2k limit error on page %d" % page, pagelen
     return hull, pagelen
+
+def quote_del(id):
+  cur.execute("""DELETE FROM quotes WHERE msgID = '%s'""" % id)
+  entry.commit()
