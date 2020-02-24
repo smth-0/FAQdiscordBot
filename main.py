@@ -3,19 +3,11 @@ from settings import *
 import wrapper
 import discord
 from discord.ext import commands
-from threading import Thread
 
-client = commands.Bot(command_prefix='.', case_insensitive=True)
 
 current_books = {}
 last_100_books = []
-left_turn, right_turn = '⬅️', '➡️'
-quote_emoji = '💾'
-
-FBdev = 'Frozenbyte Developer'  # quotable person
-quotemod = 'Moderator'  # role allowed to put quotes into DB
-book_timeout = 500  # seconds after last flip before it deletes the book -- doesnt works, ignore --
-
+# not a settings
 
 class Book:
     def __init__(self, ctx, tags=None):
@@ -52,12 +44,6 @@ class Book:
     async def close(self):
         await self.msg.delete()
 
-
-@client.event
-async def on_ready():
-    print("on")
-
-
 @client.command(aliases=['delete_quote'])
 async def delete(ctx, *args):
   try:
@@ -67,32 +53,21 @@ async def delete(ctx, *args):
     print("failed to delete msg. stack:", e)
     return
   finally:
-    print ("deleted msg from db", *args)
-    
-    
-@client.command()
-async def helpme(ctx):
-  await ctx.send("""```diff
-commands list
-```
-```asciidoc
-= ".quote <tags>" - search for keywords in the quote database. 
-(Shows all if tags is none)
-= ".get id <msgID>" - gives you jump link to the message for requested message ID. 
-Note: only quoted messages are supported. 
-= Adding 💾 emoji works as command to save the quote. 
+    print ("deleted msg from db, msgID:", *args)
 
-= Made by community members
-Lunar#1535
-sweer#6178
-Blue#8044
-= And a special thanks too
-Oobfiche#5954
-🐉Mr. Extinct#6090```""")
+@client.event
+async def on_ready():
+    print(log_on_boot)
+    game = discord.Game(activity)
+    await client.change_presence(status=discord.Status.online, activity=game)
+
+@client.command(aliases=['SBFAQhelp'])
+async def SBhelp(ctx):
+  await ctx.send(faqhelp)
 
 # how the person brings up the message
 @client.command(aliases=['quote'])
-async def book_spawn(ctx, *args):
+async def book_spawn(ctx, *args): # <--- Uhhhh
     # needs to be turned into a book
     book_obj = Book(ctx, args)
     await book_obj.start_book(ctx)

@@ -1,8 +1,9 @@
 import sqlite3
+from settings import *
 
-entry = sqlite3.connect("quotes.db")
+entry = sqlite3.connect(db_name)
 cur = entry.cursor()
-quotes_per_page = 10
+
 
 print('wrapper library imported.')
 
