@@ -4,6 +4,8 @@ import wrapper
 import discord
 from discord.ext import commands
 
+if token is '':
+    token = input('Token in settings.py is empty, enter token here or in settings.py. Token: ')
 
 current_books = {}
 last_100_books = []
